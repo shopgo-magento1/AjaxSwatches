@@ -22,10 +22,23 @@ class Wigman_AjaxSwatches_AjaxController extends Mage_Core_Controller_Front_Acti
             );
         }
 
+        // We assume that all related products have additional info. (For now)
+        $additionalInfo = '';
+        if ($this->getRequest()->getParam('additional_info') == 1) {
+            Mage::register('product', $_product);
+
+            $additionalInfoBlock = $this->getLayout()->createBlock('catalog/product_view_attributes');
+            $additionalInfoBlock->setTemplate('wigman/ajaxswatches/catalog/product/view/attributes.phtml');
+            $additionalInfo = $additionalInfoBlock->toHtml();
+
+            Mage::unregister('product');
+        }
+
         $_data = array(
             'name' => $_product->getName(),
             'short_description' => $_product->getShortDescription(),
-            'description' => $_product->getDescription()
+            'description' => $_product->getDescription(),
+            'additional_info' => $additionalInfo
         );
 
         if ($_images) {

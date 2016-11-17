@@ -35,11 +35,16 @@ $j(document).ready(function() {
                 return false;
             }
 
+            var additionalInfo = '';
+            if ($j('#product-attribute-specs-table').length > 0) {
+                additionalInfo = '&additional_info=1';
+            }
+
             $j.ajax({
                 url: posturl + 'ajaxswatches/ajax/update',
                 dataType: 'json',
                 type : 'post',
-                data: 'pid='+pid,
+                data: 'pid=' + pid + additionalInfo,
                 success: function(data) {
                     if (data) {
                         ConfigurableMediaImages.showProductData(data);
@@ -199,6 +204,10 @@ ConfigurableMediaImages.showProductData = function(data) {
     }
     if (data.description) {
         $j('dd.tab-container div.tab-content h2:contains("Details") + div.std').html(data.description);
+    }
+    if (data.additional_info && $j('#product-attribute-specs-table').length > 0) {
+        $j('#product-attribute-specs-table tbody').html(data.additional_info);
+        decorateTable('product-attribute-specs-table');
     }
     if (data.images) {
         ConfigurableMediaImages.setMoreImages(data.images);
